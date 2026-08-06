@@ -1,58 +1,48 @@
-# Melbourne Clock Playlist
+# Melbourne clock playlist
 
-A lightweight GitHub Pages controller for rotating approved gallery clock websites in Enplug on an NVIDIA Shield.
+A read-only GitHub Pages player for rotating approved clock websites on Enplug and NVIDIA Shield.
 
-## Production URLs
+## Live URLs
 
 - Player: `https://creative-innovation-labs-bmc.github.io/melbl8-clock-playlist/`
-- Admin and testing GUI: `https://creative-innovation-labs-bmc.github.io/melbl8-clock-playlist/?admin=1`
+- Export-only editor: `https://creative-innovation-labs-bmc.github.io/melbl8-clock-playlist/editor.html`
 
-The normal player URL has no visible controls. Admin mode adds pause, next and management controls.
+## Security model
 
-## Playback behaviour
+The public player has no admin mode, no local playlist override and no publishing credentials. It reads `playlist.json` and validates every clock URL before navigation.
 
-- Each enabled clock plays once per shuffled loop.
-- The list reshuffles only after every enabled clock has played.
-- The last clock in one loop cannot immediately repeat at the start of the next loop.
-- Default duration is 60 seconds, with a separate duration per clock.
-- The next clock preloads shortly before the change.
-- Each clock is reloaded when it becomes active so its opening animation restarts cleanly.
+The editor is deliberately export-only. It can load, edit, validate and download a replacement `playlist.json`, but it cannot write to GitHub or change the live player.
 
-## Security boundary
+Publishing requires authenticated write access to this repository. The exported JSON can be:
 
-The controller accepts and loads only URLs whose exact origin is:
+1. attached in ChatGPT for publication through the connected GitHub app, or
+2. pasted into the existing `playlist.json` file while signed into GitHub with repository write access.
+
+The JSON itself is public because the player must read it. Security comes from restricted repository write access, not secrecy of the configuration.
+
+## Approved URLs
+
+Only this base is accepted:
 
 `https://creative-innovation-labs-bmc.github.io/`
 
-Validation occurs when configurations are imported or saved and again immediately before an iframe is navigated. The page also has a restrictive Content Security Policy, and each clock runs in a sandboxed iframe with scripts allowed but same-origin access withheld.
+Validation runs in three places:
 
-External hosts, HTTP, custom ports, credentials, relative URLs, `javascript:`, `data:`, `blob:` and other schemes are rejected. Redirects to other hosts are blocked by the parent page's frame policy.
+1. the editor before export,
+2. GitHub Actions before deployment,
+3. the player immediately before loading each iframe.
 
 ## Updating the playlist
 
-### Temporary change on one device
+1. Open `editor.html`.
+2. Add, remove, reorder or retime clocks.
+3. Download `playlist.json`.
+4. Upload the file in ChatGPT or replace the repository's existing `playlist.json` while signed into GitHub.
+5. GitHub Actions validates the file and deploys only after all tests pass.
+6. The player checks for a newly published configuration every five minutes and restarts only when the configuration changes.
 
-1. Open the admin URL.
-2. Select **Manage**.
-3. Add, edit, reorder, enable or disable clocks.
-4. Select **Save on this device**.
-
-These changes are stored in that browser's `localStorage`. They affect only that browser or Shield and survive normal reloads.
-
-### Permanent repository default
-
-Edit `config.js`, or ask ChatGPT to add or update a clock in this repository. Permanent defaults apply to devices that have not saved a local override. In admin mode, **Reset to repository defaults** clears the local override.
-
-## Import and export
-
-Admin mode can export the current configuration as JSON and import it later. Imported links still pass the same hard-coded origin validation.
-
-## QC
-
-Run:
+## Tests
 
 ```bash
 npm test
 ```
-
-The tests cover URL allow-listing, malicious URL rejection, duration limits and shuffled-loop behaviour.

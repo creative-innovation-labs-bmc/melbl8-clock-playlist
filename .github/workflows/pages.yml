@@ -1,4 +1,4 @@
-name: Deploy GitHub Pages
+name: Validate and deploy GitHub Pages
 
 on:
   push:
@@ -16,27 +16,29 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate source and published playlist
+        run: npm test
+
   deploy:
+    needs: validate
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
-      - name: Run source tests
-        run: npm test
-
       - uses: actions/configure-pages@v5
-
       - uses: actions/upload-pages-artifact@v3
         with:
           path: .
-
       - id: deployment
         uses: actions/deploy-pages@v4
 
-      - name: Check live player
+      - name: Check live read-only player and JSON
         id: smoke
         continue-on-error: true
         env:
@@ -47,11 +49,18 @@ jobs:
             --retry 12 --retry-delay 5 --retry-all-errors --max-time 30 \
             "$PAGE_URL" -o /tmp/live-index.html
           grep -F '<title>Melbourne Clock Playlist</title>' /tmp/live-index.html
+          ! grep -F 'admin-hud' /tmp/live-index.html
+          ! grep -F 'manager' /tmp/live-index.html
 
           curl --fail --silent --show-error --location \
             --retry 12 --retry-delay 5 --retry-all-errors --max-time 30 \
-            "${PAGE_URL%/}/config.js" -o /tmp/live-config.js
-          grep -F 'CLOCK_PLAYLIST_DEFAULTS' /tmp/live-config.js
+            "${PAGE_URL%/}/playlist.json" -o /tmp/live-playlist.json
+          node -e "const p=require('/tmp/live-playlist.json'); if(!Array.isArray(p.clocks)||!p.clocks.some(c=>c.enabled)) process.exit(1)"
+
+          curl --fail --silent --show-error --location \
+            --retry 12 --retry-delay 5 --retry-all-errors --max-time 30 \
+            "${PAGE_URL%/}/editor.html" -o /tmp/live-editor.html
+          grep -F '<title>Clock Playlist JSON Editor</title>' /tmp/live-editor.html
 
       - name: Publish live smoke status
         if: always()
@@ -64,7 +73,7 @@ jobs:
         run: |
           if [ "$SMOKE_OUTCOME" = "success" ]; then
             state="success"
-            description="Live player and configuration loaded"
+            description="Read-only player, JSON and editor loaded"
           else
             state="failure"
             description="Live GitHub Pages smoke check failed"
