@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en-AU">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow, noarchive, nosnippet, noimageindex">
+  <meta name="referrer" content="no-referrer">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; connect-src 'self'; img-src 'self' data:; font-src 'self'; object-src 'none'; base-uri 'self'; form-action 'none'; frame-ancestors 'none'">
+  <title>Clock Playlist JSON Editor</title>
+  <link rel="stylesheet" href="editor.css">
+</head>
+<body>
+  <main class="editor-shell">
+    <header class="page-header">
+      <div>
+        <p class="eyebrow">Export-only utility</p>
+        <h1>Clock playlist editor</h1>
+        <p class="lede">This page cannot publish or change the live player. It only validates and downloads a new <code>playlist.json</code> file.</p>
+      </div>
+      <div class="security-note">
+        <strong>Publishing requires GitHub write access.</strong>
+        <span>Upload the exported JSON through your GitHub login, or attach it in ChatGPT for repository publication.</span>
+      </div>
+    </header>
+
+    <section class="settings-grid" aria-label="Playlist settings">
+      <label>Default duration
+        <span><input id="default-duration" type="number" min="10" max="3600" step="1"> seconds</span>
+      </label>
+      <label>Transition
+        <span><input id="transition-ms" type="number" min="0" max="2000" step="50"> milliseconds</span>
+      </label>
+      <label>Preload lead
+        <span><input id="preload-seconds" type="number" min="0" max="15" step="1"> seconds</span>
+      </label>
+    </section>
+
+    <section class="toolbar">
+      <button id="add-clock-button" type="button" class="primary">Add clock</button>
+      <button id="download-button" type="button" class="primary">Download playlist.json</button>
+      <label class="file-button">Open JSON<input id="import-input" type="file" accept="application/json,.json"></label>
+      <button id="reload-button" type="button">Reload published playlist</button>
+    </section>
+
+    <p id="form-message" class="form-message" role="status"></p>
+    <div id="clock-list" class="clock-list"></div>
+
+    <footer>
+      <p>Allowed clock base: <code>https://creative-innovation-labs-bmc.github.io/</code></p>
+      <p>No passwords, GitHub tokens or publishing credentials exist in this editor.</p>
+    </footer>
+  </main>
+
+  <template id="clock-row-template">
+    <article class="clock-row">
+      <div class="order-controls" aria-label="Reorder clock">
+        <button type="button" data-action="up" aria-label="Move up">↑</button>
+        <button type="button" data-action="down" aria-label="Move down">↓</button>
+      </div>
+      <label class="enabled-field"><input type="checkbox" data-field="enabled"><span>Enabled</span></label>
+      <label class="name-field">Name<input type="text" data-field="name" maxlength="100" required></label>
+      <label class="url-field">GitHub Pages URL<input type="url" data-field="url" required spellcheck="false"></label>
+      <label class="duration-field">Seconds<input type="number" data-field="duration" min="10" max="3600" step="1" required></label>
+      <div class="row-actions">
+        <button type="button" data-action="preview">Open</button>
+        <button type="button" data-action="delete" class="danger">Delete</button>
+      </div>
+      <p class="row-error" data-role="error"></p>
+    </article>
+  </template>
+
+  <script src="playlist-core.js"></script>
+  <script src="editor.js"></script>
+</body>
+</html>
