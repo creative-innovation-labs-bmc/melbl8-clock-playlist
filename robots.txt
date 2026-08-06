@@ -1,2 +1,4 @@
 User-agent: *
 Disallow: /
+
+Googlebot: noindex, nofollow, noarchive, nosnippet, noimageindex
