@@ -1,0 +1,8 @@
+{
+  "name": "melbl8-clock-playlist",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "test": "node tests/test-core.js && node --check playlist-core.js && node --check config.js && node --check app.js"
+  }
+}
