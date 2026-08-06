@@ -70,7 +70,9 @@ jobs:
             description="Live GitHub Pages smoke check failed"
           fi
 
-          payload=$(python3 - <<PY
+          export state description
+
+          payload=$(python3 - <<'PY'
           import json
           import os
           print(json.dumps({
