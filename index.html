@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="robots" content="noindex, nofollow, noarchive, nosnippet, noimageindex">
   <meta name="referrer" content="no-referrer">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self' data:; frame-src https://creative-innovation-labs-bmc.github.io; child-src https://creative-innovation-labs-bmc.github.io; connect-src 'none'; font-src 'self'; media-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors *; upgrade-insecure-requests">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self' data:; frame-src https://creative-innovation-labs-bmc.github.io; child-src https://creative-innovation-labs-bmc.github.io; connect-src 'self'; font-src 'self'; media-src 'none'; object-src 'none'; base-uri 'self'; form-action 'none'; frame-ancestors *; upgrade-insecure-requests">
   <title>Melbourne Clock Playlist</title>
   <link rel="stylesheet" href="styles.css">
 </head>
@@ -14,87 +14,14 @@
     <iframe id="frame-a" class="clock-frame is-active" title="Clock display" sandbox="allow-scripts" referrerpolicy="no-referrer"></iframe>
     <iframe id="frame-b" class="clock-frame" title="Next clock display" sandbox="allow-scripts" referrerpolicy="no-referrer"></iframe>
 
-    <section id="status-card" class="status-card" hidden>
-      <p id="status-kicker">Clock playlist</p>
+    <section id="status-card" class="status-card">
+      <p>Clock playlist</p>
       <h1 id="status-title">Starting…</h1>
-      <p id="status-detail">Loading approved clock links.</p>
+      <p id="status-detail">Loading the published playlist.</p>
     </section>
-
-    <div id="admin-hud" class="admin-hud" hidden>
-      <div>
-        <span class="eyebrow">Now playing</span>
-        <strong id="hud-name">Not started</strong>
-      </div>
-      <div class="hud-time"><span id="hud-remaining">0</span>s</div>
-      <div class="hud-actions">
-        <button id="pause-button" type="button">Pause</button>
-        <button id="next-button" type="button">Next</button>
-        <button id="manage-button" type="button">Manage</button>
-      </div>
-    </div>
   </main>
 
-  <dialog id="manager" class="manager">
-    <form method="dialog" class="manager-shell">
-      <header class="manager-header">
-        <div>
-          <p class="eyebrow">Approved origin only</p>
-          <h2>Clock playlist</h2>
-          <p class="manager-note">Only <code>https://creative-innovation-labs-bmc.github.io/</code> links can be saved or played.</p>
-        </div>
-        <button class="icon-button" value="close" aria-label="Close manager">×</button>
-      </header>
-
-      <section class="settings-grid" aria-label="Playlist settings">
-        <label>Default duration
-          <span><input id="default-duration" type="number" min="10" max="3600" step="1"> seconds</span>
-        </label>
-        <label>Transition
-          <span><input id="transition-ms" type="number" min="0" max="2000" step="50"> milliseconds</span>
-        </label>
-        <label>Preload lead
-          <span><input id="preload-seconds" type="number" min="0" max="15" step="1"> seconds</span>
-        </label>
-      </section>
-
-      <section class="manager-toolbar">
-        <button id="add-clock-button" type="button" class="primary">Add clock</button>
-        <button id="save-button" type="button">Save on this device</button>
-        <button id="reset-button" type="button">Reset to repository defaults</button>
-        <button id="export-button" type="button">Export JSON</button>
-        <label class="file-button">Import JSON<input id="import-input" type="file" accept="application/json,.json"></label>
-      </section>
-
-      <p id="form-message" class="form-message" role="status"></p>
-      <div id="clock-list" class="clock-list"></div>
-
-      <footer class="manager-footer">
-        <p>GUI edits are stored only in this browser. Permanent updates are made in <code>config.js</code> or by asking ChatGPT to update the repository.</p>
-        <button value="close">Done</button>
-      </footer>
-    </form>
-  </dialog>
-
-  <template id="clock-row-template">
-    <article class="clock-row">
-      <div class="drag-controls" aria-label="Reorder clock">
-        <button type="button" data-action="up" aria-label="Move up">↑</button>
-        <button type="button" data-action="down" aria-label="Move down">↓</button>
-      </div>
-      <label class="enabled-field"><input type="checkbox" data-field="enabled"><span>Enabled</span></label>
-      <label class="name-field">Name<input type="text" data-field="name" maxlength="100" required></label>
-      <label class="url-field">GitHub Pages URL<input type="url" data-field="url" required spellcheck="false"></label>
-      <label class="duration-field">Seconds<input type="number" data-field="duration" min="10" max="3600" step="1" required></label>
-      <div class="row-actions">
-        <button type="button" data-action="preview">Preview</button>
-        <button type="button" data-action="delete" class="danger">Delete</button>
-      </div>
-      <p class="row-error" data-role="error"></p>
-    </article>
-  </template>
-
   <script src="playlist-core.js"></script>
-  <script src="config.js"></script>
   <script src="app.js"></script>
 </body>
 </html>
