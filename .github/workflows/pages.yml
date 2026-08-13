@@ -38,7 +38,7 @@ jobs:
       - id: deployment
         uses: actions/deploy-pages@v4
 
-      - name: Check live read-only player and JSON
+      - name: Check live player, JSON, editor and every clock URL
         id: smoke
         continue-on-error: true
         env:
@@ -62,6 +62,36 @@ jobs:
             "${PAGE_URL%/}/editor.html" -o /tmp/live-editor.html
           grep -F '<title>Clock Playlist JSON Editor</title>' /tmp/live-editor.html
 
+          node - <<'NODE' > /tmp/clock-urls.tsv
+          const p = require('/tmp/live-playlist.json');
+          for (const c of p.clocks.filter(c => c.enabled)) {
+            process.stdout.write(`${c.name.replace(/\t|\n/g, ' ')}\t${c.url}\n`);
+          }
+          NODE
+
+          while IFS=$'\t' read -r clock_name clock_url; do
+            echo "Checking: $clock_name"
+            headers=$(mktemp)
+            body=$(mktemp)
+            curl --fail --silent --show-error --location \
+              --retry 4 --retry-delay 3 --retry-all-errors --max-time 30 \
+              --dump-header "$headers" --output "$body" "$clock_url"
+
+            test -s "$body"
+
+            if grep -Eiq '^x-frame-options:[[:space:]]*DENY([[:space:]]|$)' "$headers"; then
+              echo "Clock blocks iframe embedding with X-Frame-Options: DENY: $clock_url" >&2
+              exit 1
+            fi
+
+            if grep -Eiq "^content-security-policy:.*frame-ancestors[[:space:]]+'none'" "$headers"; then
+              echo "Clock blocks iframe embedding with frame-ancestors none: $clock_url" >&2
+              exit 1
+            fi
+
+            rm -f "$headers" "$body"
+          done < /tmp/clock-urls.tsv
+
       - name: Publish live smoke status
         if: always()
         env:
@@ -73,10 +103,10 @@ jobs:
         run: |
           if [ "$SMOKE_OUTCOME" = "success" ]; then
             state="success"
-            description="Read-only player, JSON and editor loaded"
+            description="Player, editor and all clock URLs loaded"
           else
             state="failure"
-            description="Live GitHub Pages smoke check failed"
+            description="Live player or clock URL smoke check failed"
           fi
 
           export state description
