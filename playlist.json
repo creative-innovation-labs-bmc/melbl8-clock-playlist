@@ -22,7 +22,7 @@
       "id": "clock-03-split-flap-clock",
       "name": "Clock 03 · Split-Flap Clock",
       "url": "https://creative-innovation-labs-bmc.github.io/Melbl8-Clock03-Split-flap-Open-Sans/",
-      "duration": 60,
+      "duration": 40,
       "enabled": true
     },
     {
@@ -44,7 +44,7 @@
       "name": "Multi-Office Split-Flap Wall · Random Rotation",
       "url": "https://creative-innovation-labs-bmc.github.io/aurecon-split-flap-wall-open-sans/49x7-random.html",
       "duration": 60,
-      "enabled": true
+      "enabled": false
     },
     {
       "id": "clock-06-office-triptych-weather",
