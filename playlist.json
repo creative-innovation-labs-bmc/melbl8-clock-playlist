@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "defaultDuration": 40,
+  "defaultDuration": 60,
   "transitionMs": 350,
   "preloadSeconds": 4,
   "clocks": [
@@ -8,21 +8,21 @@
       "id": "clock-01-particle-clock",
       "name": "Clock 01 · Particle Clock",
       "url": "https://creative-innovation-labs-bmc.github.io/melbl8-clock01-shield-PT-Serif-Open-Sans/",
-      "duration": 40,
+      "duration": 60,
       "enabled": true
     },
     {
       "id": "clock-02-particle-clock",
       "name": "Clock 02 · Particle Clock",
       "url": "https://creative-innovation-labs-bmc.github.io/Melbl8-clock02-shield-PT-Serif-Open-Sans/screen-8f2c6d71/",
-      "duration": 40,
+      "duration": 60,
       "enabled": true
     },
     {
       "id": "clock-03-split-flap-clock",
       "name": "Clock 03 · Split-Flap Clock",
       "url": "https://creative-innovation-labs-bmc.github.io/Melbl8-Clock03-Split-flap-Open-Sans/",
-      "duration": 40,
+      "duration": 60,
       "enabled": true
     },
     {
@@ -36,21 +36,21 @@
       "id": "clock-05-counter-field",
       "name": "Clock 05 · Counter Field",
       "url": "https://creative-innovation-labs-bmc.github.io/Melbl8-Clock05-Counter-Field-PT-Serif/",
-      "duration": 40,
+      "duration": 60,
       "enabled": true
     },
     {
       "id": "multi-office-split-flap-wall-random-rotation",
       "name": "Multi-Office Split-Flap Wall · Random Rotation",
       "url": "https://creative-innovation-labs-bmc.github.io/aurecon-split-flap-wall-open-sans/49x7-random.html",
-      "duration": 40,
+      "duration": 60,
       "enabled": true
     },
     {
       "id": "clock-06-office-triptych-weather",
       "name": "Clock 06 · Office Triptych + Weather",
       "url": "https://creative-innovation-labs-bmc.github.io/Melbl8-Clock06-Office-Triptych-Weather/",
-      "duration": 40,
+      "duration": 60,
       "enabled": true
     }
   ]
